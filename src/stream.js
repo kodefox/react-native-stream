@@ -1,6 +1,7 @@
 'use strict';
 
 exports.Stream = Stream;
+module.exports = Stream;
 
 const EE = require('./events').EventEmitter;
 const util = require('./util');
@@ -12,6 +13,8 @@ Stream.Duplex = require('./_stream_duplex').Duplex;
 Stream.Transform = require('./_stream_transform').Transform;
 Stream.PassThrough = require('./_stream_passthrough').PassThrough;
 
+// Backwards-compat with node 0.4.x
+Stream.Stream = Stream;
 
 // old-style streams.  Note that the pipe method (the only relevant
 // part of this class) is overridden in the Readable class.
