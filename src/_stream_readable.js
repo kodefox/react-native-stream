@@ -4,12 +4,16 @@ exports.Readable = Readable;
 Readable.ReadableState = ReadableState;
 
 const EE = require('./events').EventEmitter;
-const Stream = require('./stream').Stream;
+const Stream = require('./stream');
 const Buffer = require('./buffer').Buffer;
 const util = require('./util');
 const nextTick = require('./nextTick').nextTick;
 var StringDecoder;
 
+// This is totally hacky. TODO: fixme.
+if (typeof Stream.Stream === 'function') {
+  Stream = Stream.Stream;
+}
 util.inherits(Readable, Stream);
 
 function prependListener(emitter, event, fn) {

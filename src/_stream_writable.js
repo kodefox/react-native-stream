@@ -8,10 +8,14 @@ exports.Writable = Writable;
 Writable.WritableState = WritableState;
 
 const util = require('./util');
-const Stream = require('./stream').Stream;
+const Stream = require('./stream');
 const Buffer = require('./buffer').Buffer;
 const nextTick = require('./nextTick').nextTick;
 
+// This is totally hacky. TODO: fixme.
+if (typeof Stream.Stream === 'function') {
+  Stream = Stream.Stream;
+}
 util.inherits(Writable, Stream);
 
 function nop() {}
