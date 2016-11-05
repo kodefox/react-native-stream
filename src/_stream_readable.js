@@ -7,6 +7,7 @@ const EE = require('./events').EventEmitter;
 const Stream = require('./stream').Stream;
 const Buffer = require('./buffer').Buffer;
 const util = require('./util');
+const nextTick = require('./nextTick').nextTick;
 var StringDecoder;
 
 util.inherits(Readable, Stream);
@@ -412,7 +413,7 @@ function emitReadable(stream) {
   if (!state.emittedReadable) {
     state.emittedReadable = true;
     if (state.sync)
-      process.nextTick(emitReadable_, stream);
+      nextTick(emitReadable_, stream);
     else
       emitReadable_(stream);
   }
@@ -433,7 +434,7 @@ function emitReadable_(stream) {
 function maybeReadMore(stream, state) {
   if (!state.readingMore) {
     state.readingMore = true;
-    process.nextTick(maybeReadMore_, stream, state);
+    nextTick(maybeReadMore_, stream, state);
   }
 }
 
@@ -476,13 +477,11 @@ Readable.prototype.pipe = function(dest, pipeOpts) {
   }
   state.pipesCount += 1;
 
-  var doEnd = (!pipeOpts || pipeOpts.end !== false) &&
-              dest !== process.stdout &&
-              dest !== process.stderr;
+  var doEnd = (!pipeOpts || pipeOpts.end !== false);
 
   var endFn = doEnd ? onend : cleanup;
   if (state.endEmitted)
-    process.nextTick(endFn);
+    nextTick(endFn);
   else
     src.once('end', endFn);
 
@@ -674,7 +673,7 @@ Readable.prototype.on = function(ev, fn) {
       state.readableListening = state.needReadable = true;
       state.emittedReadable = false;
       if (!state.reading) {
-        process.nextTick(nReadingNextTick, this);
+        nextTick(nReadingNextTick, this);
       } else if (state.length) {
         emitReadable(this, state);
       }
@@ -703,7 +702,7 @@ Readable.prototype.resume = function() {
 function resume(stream, state) {
   if (!state.resumeScheduled) {
     state.resumeScheduled = true;
-    process.nextTick(resume_, stream, state);
+    nextTick(resume_, stream, state);
   }
 }
 
@@ -931,7 +930,7 @@ function endReadable(stream) {
 
   if (!state.endEmitted) {
     state.ended = true;
-    process.nextTick(endReadableNT, state, stream);
+    nextTick(endReadableNT, state, stream);
   }
 }
 

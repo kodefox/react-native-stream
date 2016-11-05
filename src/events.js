@@ -217,21 +217,21 @@ function _addListener(target, type, listener, prepend) {
     }
 
     // Check for listener leak
-    if (!existing.warned) {
-      m = $getMaxListeners(target);
-      if (m && m > 0 && existing.length > m) {
-        existing.warned = true;
-        const w = new Error('Possible EventEmitter memory leak detected. ' +
-                            `${existing.length} ${String(type)} listeners ` +
-                            'added. Use emitter.setMaxListeners() to ' +
-                            'increase limit');
-        w.name = 'MaxListenersExceededWarning';
-        w.emitter = target;
-        w.type = type;
-        w.count = existing.length;
-        process.emitWarning(w);
-      }
-    }
+    // if (!existing.warned) {
+    //   m = $getMaxListeners(target);
+    //   if (m && m > 0 && existing.length > m) {
+    //     existing.warned = true;
+    //     const w = new Error('Possible EventEmitter memory leak detected. ' +
+    //                         `${existing.length} ${String(type)} listeners ` +
+    //                         'added. Use emitter.setMaxListeners() to ' +
+    //                         'increase limit');
+    //     w.name = 'MaxListenersExceededWarning';
+    //     w.emitter = target;
+    //     w.type = type;
+    //     w.count = existing.length;
+    //     process.emitWarning(w);
+    //   }
+    // }
   }
 
   return target;

@@ -10,6 +10,7 @@ exports.Duplex = Duplex;
 const util = require('./util');
 const Readable = require('./_stream_readable').Readable;
 const Writable = require('./_stream_writable').Writable;
+const nextTick = require('./nextTick').nextTick;
 
 util.inherits(Duplex, Readable);
 
@@ -49,7 +50,7 @@ function onend() {
 
   // no more data can be written.
   // But allow more writes to happen in this tick.
-  process.nextTick(onEndNT, this);
+  nextTick(onEndNT, this);
 }
 
 function onEndNT(self) {

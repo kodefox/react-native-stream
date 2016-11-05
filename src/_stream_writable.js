@@ -10,6 +10,7 @@ Writable.WritableState = WritableState;
 const util = require('./util');
 const Stream = require('./stream').Stream;
 const Buffer = require('./buffer').Buffer;
+const nextTick = require('./nextTick').nextTick;
 
 util.inherits(Writable, Stream);
 
@@ -191,7 +192,7 @@ function writeAfterEnd(stream, cb) {
   var er = new Error('write after end');
   // TODO: defer error events consistently everywhere, not just the cb
   stream.emit('error', er);
-  process.nextTick(cb, er);
+  nextTick(cb, er);
 }
 
 // If we get something that is not a buffer, string, null, or undefined,
@@ -215,7 +216,7 @@ function validChunk(stream, state, chunk, cb) {
   }
   if (er) {
     stream.emit('error', er);
-    process.nextTick(cb, er);
+    nextTick(cb, er);
     valid = false;
   }
   return valid;
@@ -336,7 +337,7 @@ function doWrite(stream, state, writev, len, chunk, encoding, cb) {
 function onwriteError(stream, state, sync, er, cb) {
   --state.pendingcb;
   if (sync)
-    process.nextTick(cb, er);
+    nextTick(cb, er);
   else
     cb(er);
 
@@ -372,7 +373,7 @@ function onwrite(stream, er) {
     }
 
     if (sync) {
-      process.nextTick(afterWrite, stream, state, finished, cb);
+      nextTick(afterWrite, stream, state, finished, cb);
     } else {
       afterWrite(stream, state, finished, cb);
     }
@@ -523,7 +524,7 @@ function endWritable(stream, state, cb) {
   finishMaybe(stream, state);
   if (cb) {
     if (state.finished)
-      process.nextTick(cb);
+      nextTick(cb);
     else
       stream.once('finish', cb);
   }
