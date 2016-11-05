@@ -6,7 +6,7 @@ const Buffer = require('buffer').Buffer;
 // modules monkey-patch it to support additional encodings
 function normalizeEncoding(enc) {
   const nenc = _normalizeEncoding(enc);
-  if (typeof nenc !== 'string' && !Buffer.isEncoding(enc)))
+  if (typeof nenc !== 'string' && !Buffer.isEncoding(enc))
     throw new Error(`Unknown encoding: ${enc}`);
   return nenc || enc;
 }
