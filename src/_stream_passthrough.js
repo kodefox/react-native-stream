@@ -4,9 +4,9 @@
 
 'use strict';
 
-module.exports = PassThrough;
+exports.PassThrough = PassThrough;
 
-const Transform = require('./_stream_transform');
+const Transform = require('./_stream_transform').Transform;
 const util = require('./util');
 util.inherits(PassThrough, Transform);
 

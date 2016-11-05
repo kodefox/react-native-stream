@@ -1,19 +1,16 @@
 'use strict';
 
-module.exports = Stream;
+exports.Stream = Stream;
 
-const EE = require('./events');
+const EE = require('./events').EventEmitter;
 const util = require('./util');
 
 util.inherits(Stream, EE);
-Stream.Readable = require('./_stream_readable');
-Stream.Writable = require('./_stream_writable');
-Stream.Duplex = require('./_stream_duplex');
-Stream.Transform = require('./_stream_transform');
-Stream.PassThrough = require('./_stream_passthrough');
-
-// Backwards-compat with node 0.4.x
-Stream.Stream = Stream;
+Stream.Readable = require('./_stream_readable').Readable;
+Stream.Writable = require('./_stream_writable').Writable;
+Stream.Duplex = require('./_stream_duplex').Duplex;
+Stream.Transform = require('./_stream_transform').Transform;
+Stream.PassThrough = require('./_stream_passthrough').PassThrough;
 
 
 // old-style streams.  Note that the pipe method (the only relevant

@@ -4,11 +4,11 @@
 
 'use strict';
 
-module.exports = Writable;
+exports.Writable = Writable;
 Writable.WritableState = WritableState;
 
 const util = require('./util');
-const Stream = require('./stream');
+const Stream = require('./stream').Stream;
 const Buffer = require('./buffer').Buffer;
 
 util.inherits(Writable, Stream);

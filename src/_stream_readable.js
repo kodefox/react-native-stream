@@ -1,10 +1,10 @@
 'use strict';
 
-module.exports = Readable;
+exports.Readable = Readable;
 Readable.ReadableState = ReadableState;
 
-const EE = require('./events');
-const Stream = require('./stream');
+const EE = require('./events').EventEmitter;
+const Stream = require('./stream').Stream;
 const Buffer = require('./buffer').Buffer;
 const util = require('./util');
 var StringDecoder;

@@ -5,11 +5,11 @@
 
 'use strict';
 
-module.exports = Duplex;
+exports.Duplex = Duplex;
 
 const util = require('./util');
-const Readable = require('./_stream_readable');
-const Writable = require('./_stream_writable');
+const Readable = require('./_stream_readable').Readable;
+const Writable = require('./_stream_writable').Writable;
 
 util.inherits(Duplex, Readable);
 

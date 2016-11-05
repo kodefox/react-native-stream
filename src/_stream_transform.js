@@ -42,9 +42,9 @@
 
 'use strict';
 
-module.exports = Transform;
+exports.Transform = Transform;
 
-const Duplex = require('./_stream_duplex');
+const Duplex = require('./_stream_duplex').Duplex;
 const util = require('./util');
 util.inherits(Transform, Duplex);
 

@@ -9,10 +9,7 @@ EventHandlers.prototype = Object.create(null);
 function EventEmitter() {
   EventEmitter.init.call(this);
 }
-module.exports = EventEmitter;
-
-// Backwards-compat with node 0.10.x
-EventEmitter.EventEmitter = EventEmitter;
+exports.EventEmitter = EventEmitter;
 
 EventEmitter.prototype._events = undefined;
 EventEmitter.prototype._maxListeners = undefined;
