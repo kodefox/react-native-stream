@@ -1,7 +1,5 @@
 'use strict';
 
-var domain;
-
 // This constructor is used to store event handlers. Instantiating this is
 // faster than explicitly calling `Object.create(null)` to get a "clean" empty
 // object (tested with v8 v4.9).
@@ -16,9 +14,6 @@ module.exports = EventEmitter;
 // Backwards-compat with node 0.10.x
 EventEmitter.EventEmitter = EventEmitter;
 
-EventEmitter.usingDomains = false;
-
-EventEmitter.prototype.domain = undefined;
 EventEmitter.prototype._events = undefined;
 EventEmitter.prototype._maxListeners = undefined;
 
@@ -40,15 +35,6 @@ Object.defineProperty(EventEmitter, 'defaultMaxListeners', {
 });
 
 EventEmitter.init = function() {
-  this.domain = null;
-  if (EventEmitter.usingDomains) {
-    // if there is an active domain, then attach to it.
-    domain = domain || require('./domain');
-    if (domain.active && !(this instanceof domain.Domain)) {
-      this.domain = domain.active;
-    }
-  }
-
   if (!this._events || this._events === Object.getPrototypeOf(this)._events) {
     this._events = new EventHandlers();
     this._eventsCount = 0;
@@ -134,8 +120,7 @@ function emitMany(handler, isFn, self, args) {
 }
 
 EventEmitter.prototype.emit = function emit(type) {
-  var er, handler, len, args, i, events, domain;
-  var needDomainExit = false;
+  var er, handler, len, args, i, events;
   var doError = (type === 'error');
 
   events = this._events;
@@ -144,19 +129,10 @@ EventEmitter.prototype.emit = function emit(type) {
   else if (!doError)
     return false;
 
-  domain = this.domain;
-
   // If there is no 'error' event listener then throw.
   if (doError) {
     er = arguments[1];
-    if (domain) {
-      if (!er)
-        er = new Error('Uncaught, unspecified "error" event');
-      er.domainEmitter = this;
-      er.domain = domain;
-      er.domainThrown = false;
-      domain.emit('error', er);
-    } else if (er instanceof Error) {
+    if (er instanceof Error) {
       throw er; // Unhandled 'error' event
     } else {
       // At least give some kind of context to the user
@@ -171,11 +147,6 @@ EventEmitter.prototype.emit = function emit(type) {
 
   if (!handler)
     return false;
-
-  if (domain && this !== process) {
-    domain.enter();
-    needDomainExit = true;
-  }
 
   var isFn = typeof handler === 'function';
   len = arguments.length;
@@ -200,9 +171,6 @@ EventEmitter.prototype.emit = function emit(type) {
         args[i - 1] = arguments[i];
       emitMany(handler, isFn, this, args);
   }
-
-  if (needDomainExit)
-    domain.exit();
 
   return true;
 };
