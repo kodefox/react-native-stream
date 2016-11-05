@@ -1,5 +1,5 @@
 if (typeof process !== 'undefined' && process.nextTick) {
-  exports.nextTick = proces.nextTick;
+  exports.nextTick = process.nextTick;
 } else if (typeof setImmediate !== 'undefined') {
   exports.nextTick = setImmediate;
 } else {
