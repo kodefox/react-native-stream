@@ -13,6 +13,7 @@
  * @throws {TypeError} Will error if either constructor is null, or if
  *     the super constructor lacks a prototype.
  */
+const newSetProto = (Object.setPrototypeOf != null);
 exports.inherits = function(ctor, superCtor) {
 
   if (ctor === undefined || ctor === null)
@@ -28,5 +29,9 @@ exports.inherits = function(ctor, superCtor) {
                         'have a prototype');
 
   ctor.super_ = superCtor;
-  Object.setPrototypeOf(ctor.prototype, superCtor.prototype);
+  if (newSetProto) {
+    Object.setPrototypeOf(ctor.prototype, superCtor.prototype);
+  } else {
+    ctor.prototype.__proto__ = superCtor.prototype;
+  }
 };
